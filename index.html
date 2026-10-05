@@ -8,6 +8,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
 :root{
@@ -721,15 +724,15 @@ details.optional summary::-webkit-details-marker{
   display:none;
 }
 
+details.optional[open] summary .chev{
+  transform:rotate(90deg);
+}
+
 details.optional summary .chev{
   color:var(--text-faint);
   font-family:var(--font-mono);
   font-size:13px;
   transition:transform .15s ease;
-}
-
-details.optional[open] summary .chev{
-  transform:rotate(90deg);
 }
 
 details.optional .body{
@@ -1060,6 +1063,21 @@ html[data-theme="dark"] .results-score .value{
   letter-spacing:.03em;
   color:var(--text-faint);
 }
+
+.wtable{width:100%;border-collapse:collapse;font-size:13px;margin-top:4px}
+.wtable th,.wtable td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--border-soft)}
+.wtable th{color:var(--text-faint);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.02em}
+.pill{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-family:var(--font-mono);font-size:11px;font-weight:600}
+.pill.good{background:rgba(63,125,79,.12);color:#3F7D4F}
+.pill.warn{background:var(--warn-soft);color:var(--warn)}
+.pill.bad{background:rgba(180,56,46,.12);color:#B4382E}
+.qrbox{display:flex;flex-direction:column;align-items:center;gap:10px;padding:16px;background:var(--surface-2);border-radius:var(--radius-sm);margin-top:4px}
+.wfield{margin-bottom:14px}
+.wfield label{font-size:12px;color:var(--text-dim);font-weight:600}
+.wtabs{display:flex;gap:8px;margin-bottom:16px}
+.wtabs .btn{flex:1}
+.wtabs .btn.active{background:var(--chocolate);color:var(--champagne);border-color:var(--chocolate)}
+html[data-theme="dark"] .wtabs .btn.active{background:var(--champagne);color:var(--chocolate);border-color:var(--champagne)}
 </style>
 
 </head>
@@ -1079,6 +1097,8 @@ html[data-theme="dark"] .results-score .value{
 
 <div class="nav-right">
 <div class="live-dot" id="navDot" title="current strip colour"></div>
+<a class="btn ghost" href="#worker" style="padding:8px 10px">Worker</a>
+<a class="btn ghost" href="#admin" style="padding:8px 10px">Admin</a>
 
 <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
 <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -1492,6 +1512,34 @@ These results are generated from simulated inputs using an illustrative demo res
 </div>
 </section>
 
+<section class="view" id="view-worker">
+<nav class="topnav">
+<div class="logo">Cu<span class="dot">·</span>H₂S <span style="font-family:var(--font-body);font-size:12px;font-weight:400;color:var(--text-faint);margin-left:4px;">Lab</span></div>
+<div class="nav-links"><a href="#">Back to Simulator</a></div>
+<div class="nav-right">
+<button class="theme-toggle" id="themeToggle3" aria-label="Toggle dark mode">
+<svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+<svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+</button>
+</div>
+</nav>
+<div class="section" id="workerApp">Loading…</div>
+</section>
+
+<section class="view" id="view-admin">
+<nav class="topnav">
+<div class="logo">Cu<span class="dot">·</span>H₂S <span style="font-family:var(--font-body);font-size:12px;font-weight:400;color:var(--text-faint);margin-left:4px;">Lab</span></div>
+<div class="nav-links"><a href="#">Back to Simulator</a></div>
+<div class="nav-right">
+<button class="theme-toggle" id="themeToggle4" aria-label="Toggle dark mode">
+<svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+<svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+</button>
+</div>
+</nav>
+<div class="section" id="adminApp">Loading…</div>
+</section>
+
 <canvas id="hiddenCanvas" style="display:none"></canvas>
 
 <script>
@@ -1576,21 +1624,38 @@ const hiddenCanvas=document.getElementById('hiddenCanvas');
 
 const viewSimulate=document.getElementById('view-simulate');
 const viewResults=document.getElementById('view-results');
+const viewWorker=document.getElementById('view-worker');
+const viewAdmin=document.getElementById('view-admin');
+
+document.getElementById('themeToggle3').addEventListener('click',toggleTheme);
+document.getElementById('themeToggle4').addEventListener('click',toggleTheme);
 
 function renderRoute(){
 
   const hash=location.hash;
   const isResults=hash==='#results';
+  const isWorker=hash==='#worker'||hash.indexOf('#pair=')===0||hash.indexOf('#w=')===0;
+  const isAdmin=hash==='#admin';
 
-  viewSimulate.classList.toggle('active',!isResults);
+  viewSimulate.classList.toggle('active',!isResults&&!isWorker&&!isAdmin);
   viewResults.classList.toggle('active',isResults);
+  viewWorker.classList.toggle('active',isWorker);
+  viewAdmin.classList.toggle('active',isAdmin);
 
   document.title=isResults
     ?'Cu·H₂S — Results'
+    :isWorker?'Cu·H₂S — Worker'
+    :isAdmin?'Cu·H₂S — Admin'
     :'Cu·H₂S — Copper Acetate Strip Lab';
 
   if(isResults){
     renderResults();
+    window.scrollTo(0,0);
+  }else if(isWorker){
+    renderWorkerRoute();
+    window.scrollTo(0,0);
+  }else if(isAdmin){
+    renderAdminRoute();
     window.scrollTo(0,0);
   }else if(hash&&hash!=='#'){
     const el=document.getElementById(hash.slice(1));
@@ -2264,6 +2329,382 @@ resetBtn.addEventListener('click',()=>{
 
   update();
 });
+
+// ============== WORKER / ADMIN PORTAL ==============
+// Backed by Firebase Firestore so it works for ANY visitor to your live
+// Vercel site — no Claude account or sign-in involved.
+//
+// SETUP (one-time, ~3 minutes):
+// 1. Go to https://console.firebase.google.com -> Add project (free tier is fine).
+// 2. In the project: Build -> Firestore Database -> Create database -> Start in TEST MODE.
+// 3. Project settings (gear icon) -> General -> "Your apps" -> Add app -> Web (</>) .
+// 4. Copy the firebaseConfig object it gives you and paste it below, replacing the placeholder.
+// 5. Commit + push — Vercel will redeploy automatically.
+// NOTE: Test mode Firestore rules allow anyone to read/write for 30 days — fine for a
+// hackathon demo. Before any real/production use, lock this down with proper Firestore
+// security rules (and don't store plaintext passwords — this demo does, for simplicity).
+
+const firebaseConfig={
+  apiKey:"AIzaSyBhivK3BbHYGud-fo0XRnTVTJEVgO8UnVU",
+  authDomain:"h2s-detector-52734.firebaseapp.com",
+  databaseURL:"https://h2s-detector-52734-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"h2s-detector-52734",
+  storageBucket:"h2s-detector-52734.firebasestorage.app",
+  messagingSenderId:"915208215758",
+  appId:"1:915208215758:web:8437b5e8eaae3688cbc49f",
+  measurementId:"G-JNGXG84M79"
+};
+
+let db=null;
+function getDb(force){
+  if(force) db=null;
+  if(db) return db;
+  try{
+    if(firebaseConfig.apiKey==='YOUR_API_KEY') return null;
+    if(!firebase.apps||!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    db=firebase.firestore();
+  }catch(e){ console.error(e); db=null; }
+  return db;
+}
+
+function wuid(){return Math.random().toString(36).slice(2,10);}
+function wnow(){return Date.now();}
+function wfmt(ts){
+  if(!ts)return '—';
+  const d=new Date(ts);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+}
+function wesc(s){return (s||'').toString().replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function sanitizePhone(p){return (p||'').replace(/\D/g,'');}
+
+function analyzeWorkerPhoto(img){
+  const ctx=hiddenCanvas.getContext('2d');
+  const w=img.naturalWidth,h=img.naturalHeight;
+  hiddenCanvas.width=w;hiddenCanvas.height=h;
+  ctx.drawImage(img,0,0,w,h);
+  const sx=Math.floor(w*.35),sy=Math.floor(h*.35),sw=Math.max(1,Math.floor(w*.3)),sh=Math.max(1,Math.floor(h*.3));
+  const data=ctx.getImageData(sx,sy,sw,sh).data;
+  let r=0,g=0,b=0,n=0;
+  for(let i=0;i<data.length;i+=4){r+=data[i];g+=data[i+1];b+=data[i+2];n++;}
+  r/=n;g/=n;b/=n;
+  return Math.round(Math.min(100,Math.sqrt((r-192)**2+(g-192)**2+(b-192)**2)/4.4));
+}
+
+function wsavedToken(){return localStorage.getItem('h2s_worker_token');}
+function wsaveToken(t){localStorage.setItem('h2s_worker_token',t);}
+function wclearToken(){localStorage.removeItem('h2s_worker_token');}
+
+let pairUnsub=null;
+function stopPairWatch(){ if(pairUnsub){pairUnsub();pairUnsub=null;} }
+
+async function renderWorkerRoute(){
+  stopPairWatch();
+  const el=document.getElementById('workerApp');
+  const ok=await getDb();
+  if(!ok){
+    el.innerHTML='<div class="disclaimer"><strong>Not connected.</strong> Add your Firebase config near the top of the script (see the setup comment) and redeploy. <button class="btn ghost" id="wRetry" style="margin-left:6px">Retry</button></div>';
+    document.getElementById('wRetry').onclick=()=>{ getDb(true); renderWorkerRoute(); };
+    return;
+  }
+  const hash=location.hash;
+  if(hash.indexOf('#pair=')===0) return renderPairClaim(hash.slice(6));
+  if(hash.indexOf('#w=')===0) return workerAutoLogin(hash.slice(3));
+  const t=wsavedToken();
+  if(t){
+    const s=await db.collection('workers').doc(t).get();
+    if(s.exists) return workerDash(t);
+    wclearToken();
+  }
+  renderWorkerEntry();
+}
+
+function renderWorkerEntry(){
+  const el=document.getElementById('workerApp');
+  el.innerHTML=`
+  <div class="wtabs">
+    <button class="btn active" id="wTabLogin">Log in</button>
+    <button class="btn" id="wTabQr">Log in with QR</button>
+    <button class="btn" id="wTabSignup">Sign up</button>
+  </div>
+  <div class="ctl-card tint-c" id="wFormArea" style="align-items:stretch;text-align:left"></div>`;
+  function setTab(which){
+    ['wTabLogin','wTabQr','wTabSignup'].forEach(id=>document.getElementById(id).classList.toggle('active',id===which));
+    const area=document.getElementById('wFormArea');
+    if(which==='wTabLogin'){ stopPairWatch(); area.innerHTML=wLoginForm(); wireLogin(); }
+    else if(which==='wTabQr'){ area.innerHTML='<p style="color:var(--text-faint);font-size:13px">Generating your login QR…</p>'; startPairDisplay(); }
+    else{ stopPairWatch(); area.innerHTML=wSignupForm(); wireSignup(); }
+  }
+  document.getElementById('wTabLogin').onclick=()=>setTab('wTabLogin');
+  document.getElementById('wTabQr').onclick=()=>setTab('wTabQr');
+  document.getElementById('wTabSignup').onclick=()=>setTab('wTabSignup');
+  setTab('wTabLogin');
+}
+
+function wLoginForm(){return `
+  <div class="wfield"><label>Phone number</label><input class="ctl" id="lPhone" placeholder="10-digit number" style="width:100%"></div>
+  <div class="wfield"><label>Password</label><input class="ctl" id="lPass" type="password" style="width:100%"></div>
+  <div class="disclaimer" id="lErr" style="display:none;margin:0 0 12px 0"></div>
+  <button class="btn primary wide" id="lGo">Log in</button>`;}
+
+function wireLogin(){
+  document.getElementById('lGo').onclick=async()=>{
+    const phone=sanitizePhone(document.getElementById('lPhone').value);
+    const pass=document.getElementById('lPass').value;
+    const errEl=document.getElementById('lErr'); errEl.style.display='none';
+    if(!phone||!pass){errEl.textContent='Enter phone and password.';errEl.style.display='block';return;}
+    const idx=await db.collection('phoneindex').doc(phone).get();
+    if(!idx.exists){errEl.textContent='No account with that phone. Try Sign up.';errEl.style.display='block';return;}
+    const token=idx.data().token;
+    const w=await db.collection('workers').doc(token).get();
+    if(!w.exists||w.data().password!==pass){errEl.textContent='Wrong password.';errEl.style.display='block';return;}
+    wsaveToken(token); workerDash(token);
+  };
+}
+
+function wSignupForm(){return `
+  <div class="wfield"><label>Full name</label><input class="ctl" id="sName" style="width:100%"></div>
+  <div class="wfield"><label>Phone number</label><input class="ctl" id="sPhone" placeholder="10-digit number" style="width:100%"></div>
+  <div class="wfield"><label>Choose a password</label><input class="ctl" id="sPass" type="password" style="width:100%"></div>
+  <div class="disclaimer" id="sErr" style="display:none;margin:0 0 12px 0"></div>
+  <button class="btn primary wide" id="sGo">Create account</button>`;}
+
+function wireSignup(){
+  document.getElementById('sGo').onclick=async()=>{
+    const name=document.getElementById('sName').value.trim();
+    const phone=sanitizePhone(document.getElementById('sPhone').value);
+    const pass=document.getElementById('sPass').value;
+    const errEl=document.getElementById('sErr'); errEl.style.display='none';
+    if(!name||phone.length<6||!pass){errEl.textContent='Fill in every field (valid phone needed).';errEl.style.display='block';return;}
+    const idx=await db.collection('phoneindex').doc(phone).get();
+    if(idx.exists){errEl.textContent='That phone is already registered — log in instead.';errEl.style.display='block';return;}
+    const token=wuid();
+    await db.collection('workers').doc(token).set({name,phone,password:pass,createdAt:wnow(),
+      status:'out',lastLogin:null,lastLogout:null,ppm:0,emergencyCount:0,emergencies:[],history:[]});
+    await db.collection('phoneindex').doc(phone).set({token});
+    wsaveToken(token); workerDash(token);
+  };
+}
+
+// This device (unauthenticated) shows a QR. A phone scans it, taps one
+// button, and THIS device logs in automatically via a realtime watch —
+// no further action needed here, like WhatsApp Web's QR pairing.
+async function startPairDisplay(){
+  const pairId=wuid();
+  await db.collection('pairings').doc(pairId).set({claimedToken:null,createdAt:wnow()});
+  const area=document.getElementById('wFormArea');
+  const link=location.origin+location.pathname+'#pair='+pairId;
+  area.innerHTML=`<div class="qrbox"><div id="qrHolder"></div>
+    <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-faint)">Scan with your phone's camera</span>
+    <span style="font-size:12px;color:var(--text-dim)">Opens a one-tap login page — this screen updates itself.</span></div>`;
+  try{ new QRCode(document.getElementById('qrHolder'),{text:link,width:170,height:170,colorDark:'#442216',colorLight:'#FFFDF7'}); }catch(e){}
+  pairUnsub=db.collection('pairings').doc(pairId).onSnapshot(snap=>{
+    const d=snap.data();
+    if(d&&d.claimedToken){
+      stopPairWatch();
+      wsaveToken(d.claimedToken);
+      db.collection('pairings').doc(pairId).delete().catch(()=>{});
+      workerDash(d.claimedToken);
+    }
+  });
+}
+
+// Phone-side: lands here from the scanned QR link.
+async function renderPairClaim(pairId){
+  const el=document.getElementById('workerApp');
+  const t=wsavedToken();
+  if(t){
+    const s=await db.collection('workers').doc(t).get();
+    if(s.exists){
+      const w=s.data();
+      el.innerHTML=`<div class="ctl-card tint-c" style="align-items:stretch;text-align:left">
+        <p style="margin:0 0 14px 0">Log in as <b>${wesc(w.name)}</b> on your other device?</p>
+        <button class="btn primary wide" id="confirmPairBtn">Log in</button></div>`;
+      document.getElementById('confirmPairBtn').onclick=async()=>{
+        await db.collection('pairings').doc(pairId).update({claimedToken:t});
+        el.innerHTML='<div class="disclaimer" style="border-left-color:var(--accent)"><strong>Logged in.</strong> Check your other device — it just loaded automatically.</div>';
+      };
+      return;
+    }
+    wclearToken();
+  }
+  el.innerHTML=`<div class="disclaimer">Log in or sign up below — your other device will log in automatically the moment you do.</div>
+  <div class="wtabs"><button class="btn active" id="wTabLogin">Log in</button><button class="btn" id="wTabSignup">Sign up</button></div>
+  <div class="ctl-card tint-c" id="wFormArea" style="align-items:stretch;text-align:left"></div>`;
+  function setTab(which){
+    document.getElementById('wTabLogin').classList.toggle('active',which==='l');
+    document.getElementById('wTabSignup').classList.toggle('active',which==='s');
+    const area=document.getElementById('wFormArea');
+    area.innerHTML=which==='l'?wLoginForm():wSignupForm();
+    if(which==='l') wirePairLogin(pairId); else wirePairSignup(pairId);
+  }
+  document.getElementById('wTabLogin').onclick=()=>setTab('l');
+  document.getElementById('wTabSignup').onclick=()=>setTab('s');
+  setTab('l');
+}
+
+function wirePairLogin(pairId){
+  document.getElementById('lGo').onclick=async()=>{
+    const phone=sanitizePhone(document.getElementById('lPhone').value);
+    const pass=document.getElementById('lPass').value;
+    const errEl=document.getElementById('lErr'); errEl.style.display='none';
+    if(!phone||!pass){errEl.textContent='Enter phone and password.';errEl.style.display='block';return;}
+    const idx=await db.collection('phoneindex').doc(phone).get();
+    if(!idx.exists){errEl.textContent='No account with that phone.';errEl.style.display='block';return;}
+    const token=idx.data().token;
+    const w=await db.collection('workers').doc(token).get();
+    if(!w.exists||w.data().password!==pass){errEl.textContent='Wrong password.';errEl.style.display='block';return;}
+    wsaveToken(token);
+    await db.collection('pairings').doc(pairId).update({claimedToken:token});
+    document.getElementById('workerApp').innerHTML='<div class="disclaimer" style="border-left-color:var(--accent)"><strong>Logged in.</strong> Check your other device — it just loaded automatically.</div>';
+  };
+}
+
+function wirePairSignup(pairId){
+  document.getElementById('sGo').onclick=async()=>{
+    const name=document.getElementById('sName').value.trim();
+    const phone=sanitizePhone(document.getElementById('sPhone').value);
+    const pass=document.getElementById('sPass').value;
+    const errEl=document.getElementById('sErr'); errEl.style.display='none';
+    if(!name||phone.length<6||!pass){errEl.textContent='Fill in every field (valid phone needed).';errEl.style.display='block';return;}
+    const idx=await db.collection('phoneindex').doc(phone).get();
+    if(idx.exists){errEl.textContent='That phone is already registered — log in instead.';errEl.style.display='block';return;}
+    const token=wuid();
+    await db.collection('workers').doc(token).set({name,phone,password:pass,createdAt:wnow(),
+      status:'out',lastLogin:null,lastLogout:null,ppm:0,emergencyCount:0,emergencies:[],history:[]});
+    await db.collection('phoneindex').doc(phone).set({token});
+    wsaveToken(token);
+    await db.collection('pairings').doc(pairId).update({claimedToken:token});
+    document.getElementById('workerApp').innerHTML='<div class="disclaimer" style="border-left-color:var(--accent)"><strong>Logged in.</strong> Check your other device — it just loaded automatically.</div>';
+  };
+}
+
+async function workerAutoLogin(token){
+  const s=await db.collection('workers').doc(token).get();
+  if(s.exists){ wsaveToken(token); history.replaceState(null,'','#worker'); return workerDash(token); }
+  history.replaceState(null,'','#worker');
+  renderWorkerEntry();
+}
+
+async function workerDash(token){
+  const el=document.getElementById('workerApp');
+  const snap=await db.collection('workers').doc(token).get();
+  if(!snap.exists){ wclearToken(); return renderWorkerEntry(); }
+  const w=snap.data();
+  const weekAgo=wnow()-7*86400000;
+  const recent=(w.history||[]).filter(h=>h.ts>=weekAgo).sort((a,b)=>b.ts-a.ts).slice(0,20);
+  const emLines=(w.emergencies||[]).slice(-5).reverse();
+  el.innerHTML=`
+  <div class="ctl-card tint-a" style="align-items:stretch;text-align:left">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+      <div><h3 style="margin:0">${wesc(w.name)}</h3><p style="margin:2px 0 0;color:var(--text-faint);font-size:12.5px">${wesc(w.phone)}</p></div>
+      <span class="pill ${w.status==='in'?'good':'warn'}">${w.status==='in'?'CHECKED IN':'CHECKED OUT'}</span>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn primary" id="toggleShift">${w.status==='in'?'Check out':'Check in'}</button>
+      <button class="btn ghost" id="wLogout">Log out of this device</button>
+    </div>
+  </div>
+  <div class="ctl-card tint-c" style="align-items:stretch;text-align:left;margin-top:16px">
+    <h3 style="margin:0 0 10px">Report a strip reading</h3>
+    <p style="color:var(--text-faint);font-size:12.5px;margin:0 0 10px">Upload a photo of your strip to log your current PPM.</p>
+    <input type="file" id="photoIn" accept="image/*" class="ctl" style="width:100%">
+    <p style="margin-top:10px">Current reading: <span style="font-family:var(--font-mono);font-weight:700" id="ppmReadout">${w.ppm||0}/100</span></p>
+  </div>
+  <div class="ctl-card tint-b" style="align-items:stretch;text-align:left;margin-top:16px">
+    <h3 style="margin:0 0 10px">Your QR badge</h3>
+    <div class="qrbox"><div id="qrHolder2"></div><span style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint)">backup: opens your page directly on this same phone</span></div>
+  </div>
+  <div class="ctl-card tint-c" style="align-items:stretch;text-align:left;margin-top:16px">
+    <h3 style="margin:0 0 10px">Last 7 days</h3>
+    ${recent.length?`<table class="wtable"><tr><th>Event</th><th>Time</th></tr>${recent.map(h=>`<tr><td>${h.type==='in'?'Checked in':'Checked out'}</td><td>${wfmt(h.ts)}</td></tr>`).join('')}</table>`:'<p style="color:var(--text-faint);font-size:13px">No check-ins yet this week.</p>'}
+  </div>
+  ${emLines.length?`<div class="ctl-card tint-c" style="align-items:stretch;text-align:left;margin-top:16px"><h3 style="margin:0 0 10px">Past emergencies</h3><table class="wtable"><tr><th>Time</th><th>PPM</th></tr>${emLines.map(e=>`<tr><td>${wfmt(e.ts)}</td><td>${e.ppm}</td></tr>`).join('')}</table></div>`:''}
+  `;
+  try{ new QRCode(document.getElementById('qrHolder2'),{text:location.origin+location.pathname+'#w='+token,width:140,height:140,colorDark:'#442216',colorLight:'#FFFDF7'}); }catch(e){}
+
+  document.getElementById('toggleShift').onclick=async()=>{
+    const goingIn=w.status!=='in';
+    const entry={type:goingIn?'in':'out',ts:wnow()};
+    const hist=(w.history||[]).concat([entry]).slice(-40);
+    await db.collection('workers').doc(token).update({
+      status:goingIn?'in':'out',
+      lastLogin:goingIn?wnow():w.lastLogin,
+      lastLogout:!goingIn?wnow():w.lastLogout,
+      history:hist
+    });
+    workerDash(token);
+  };
+  document.getElementById('wLogout').onclick=()=>{wclearToken();renderWorkerEntry();};
+  document.getElementById('photoIn').onchange=(e)=>{
+    const file=e.target.files[0]; if(!file)return;
+    const img=new Image();
+    img.onload=async()=>{
+      const score=analyzeWorkerPhoto(img);
+      const isEmergency=score>=85;
+      const upd={ppm:score};
+      if(isEmergency){
+        const ems=(w.emergencies||[]).concat([{ts:wnow(),ppm:score}]).slice(-20);
+        upd.emergencies=ems; upd.emergencyCount=(w.emergencyCount||0)+1;
+      }
+      await db.collection('workers').doc(token).update(upd);
+      document.getElementById('ppmReadout').textContent=score+'/100'+(isEmergency?' ⚠':'');
+    };
+    img.src=URL.createObjectURL(file);
+  };
+}
+
+// ================= ADMIN =================
+function adminAuthed(){return sessionStorage.getItem('h2s_admin')==='1';}
+let adminUnsub=null;
+async function renderAdminRoute(){
+  if(adminUnsub){adminUnsub();adminUnsub=null;}
+  const el=document.getElementById('adminApp');
+  const ok=await getDb();
+  if(!ok){
+    el.innerHTML='<div class="disclaimer"><strong>Not connected.</strong> Add your Firebase config near the top of the script (see the setup comment) and redeploy. <button class="btn ghost" id="aRetry" style="margin-left:6px">Retry</button></div>';
+    document.getElementById('aRetry').onclick=()=>{ getDb(true); renderAdminRoute(); };
+    return;
+  }
+  if(adminAuthed()) return adminDash();
+  el.innerHTML=`<div class="ctl-card tint-c" style="align-items:stretch;text-align:left">
+    <div class="wfield"><label>Admin password</label><input class="ctl" id="aPass" type="password" style="width:100%"></div>
+    <div class="disclaimer" id="aErr" style="display:none;margin:0 0 12px 0"></div>
+    <button class="btn primary wide" id="aGo">Log in</button>
+    <p style="color:var(--text-faint);font-size:12px;margin-top:10px">First time here sets the admin password.</p></div>`;
+  document.getElementById('aGo').onclick=async()=>{
+    const pass=document.getElementById('aPass').value;
+    const errEl=document.getElementById('aErr'); errEl.style.display='none';
+    if(!pass){errEl.textContent='Enter a password.';errEl.style.display='block';return;}
+    const ref=db.doc('admin/main'); const snap=await ref.get();
+    if(!snap.exists){ await ref.set({password:pass}); sessionStorage.setItem('h2s_admin','1'); return adminDash(); }
+    if(snap.data().password!==pass){errEl.textContent='Wrong password.';errEl.style.display='block';return;}
+    sessionStorage.setItem('h2s_admin','1'); adminDash();
+  };
+}
+
+async function adminDash(){
+  const el=document.getElementById('adminApp');
+  el.innerHTML=`<h3 style="margin:0 0 6px">Live worker monitoring</h3>
+    <div id="adminTable" style="color:var(--text-faint);font-size:13px">Loading…</div>
+    <button class="btn ghost" id="aLogout" style="margin-top:14px">Log out of admin</button>`;
+  document.getElementById('aLogout').onclick=()=>{sessionStorage.removeItem('h2s_admin');if(adminUnsub)adminUnsub();renderAdminRoute();};
+  adminUnsub=db.collection('workers').onSnapshot(qs=>{
+    const rows=qs.docs.map(d=>({id:d.id,...d.data()}));
+    const t=document.getElementById('adminTable');
+    if(!t)return;
+    if(!rows.length){t.innerHTML='<p>No workers registered yet.</p>';return;}
+    t.innerHTML=`<table class="wtable"><tr><th>Name</th><th>Phone</th><th>PPM</th><th>Status</th><th>Last in</th><th>Last out</th><th>Emergencies</th></tr>
+    ${rows.map(w=>{
+      const ppm=w.ppm||0;
+      const cls=ppm>=85?'bad':ppm>=50?'warn':'good';
+      return `<tr><td>${wesc(w.name)}</td><td>${wesc(w.phone)}</td>
+        <td><span class="pill ${cls}">${ppm}</span></td>
+        <td><span class="pill ${w.status==='in'?'good':'warn'}">${w.status==='in'?'IN':'OUT'}</span></td>
+        <td>${wfmt(w.lastLogin)}</td><td>${wfmt(w.lastLogout)}</td>
+        <td>${w.emergencyCount?`<span class="pill bad">${w.emergencyCount}</span>`:'0'}</td></tr>`;
+    }).join('')}</table>`;
+  },err=>{const t=document.getElementById('adminTable'); if(t)t.innerHTML='<p>Live updates unavailable: '+err.code+'</p>';});
+}
 
 update();
 renderRoute();
